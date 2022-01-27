@@ -42,14 +42,14 @@ const base64Loader = require( '@squirrel-forge/sass-base64-loader' );
 const sassOptions = { importers : [ base64Loader( /* null|Base64loadOptions */ ) ] };
 
 // Plugin way, supply the sass options as second argument
-// It will create the importers property if required and append the importer.
+// It will create the functions property if required and add the signature and function.
 const sassOptions = {};
 base64Loader( /* null|Base64loadOptions */, sassOptions );
 
-// Since the importer is sync it work for both sync and async compile
+// If not using the remote option you may use the sync compile which requires an explicit mimetype as second argument
 const result = sass.compile( scssFilename, sassOptions );
 
-// OR
+// OR when using the async api you may use the remote option and automatically detect mimetypes
 const result = await sass.compileAsync( scssFilename, sassOptions );
 ```
 
@@ -76,13 +76,13 @@ const BASE64LOAD_DEFAULT_OPTIONS = {
 
 ### Remote file loading
 
-If you wish to load data from urls you need to set *Base64loadOptions.remote* = *true*
+If you wish to load data from urls or automatically detect mimetypes you need to set *Base64loadOptions.remote* = *true* and use the async *sass.compileAsync* api that supports async functions.
 
 #### Requirements
 
 All dependencies are loose and will only be required at runtime if required through the remote option or because you are not setting the mimetype which will then be detected if the remote option is enabled.
 
-Remote loading requires [node-fetch@^2.x.x](https://www.npmjs.com/package/node-fetch/v/2.6.7) to function in a *node@^10.x.x* environment, on higher node versionsyou should be able to use newer versions.
+Remote loading requires [node-fetch@^2.x.x](https://www.npmjs.com/package/node-fetch/v/2.6.7) to function in a *node@^10.x.x* environment, on higher node versions you should be able to use newer versions.
 
 #### Optional argument $mimetype
 
