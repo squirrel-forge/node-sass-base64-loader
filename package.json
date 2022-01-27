@@ -1,0 +1,33 @@
+{
+  "name": "@squirrel-forge/sass-base64-loader",
+  "version": "0.9.0",
+  "description": "A node sass function for importing files as base64 encoded strings built for the new sass js api.",
+  "main": "base64Loader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/squirrel-forge/node-sass-base64-loader.git"
+  },
+  "keywords": [
+    "sass",
+    "plugin",
+    "base64",
+    "loader",
+    "sass-function",
+    "base64-loader"
+  ],
+  "author": "Daniel Hartwell <me@siux.info> (http://siux.info)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/squirrel-forge/node-sass-base64-loader/issues"
+  },
+  "homepage": "https://github.com/squirrel-forge/node-sass-base64-loader#readme",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "peerDependencies": {
+    "sass": "^1.40.0"
+  }
+}
