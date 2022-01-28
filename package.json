@@ -1,6 +1,6 @@
 {
   "name": "@squirrel-forge/sass-base64-loader",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "A node sass function for importing files as base64 encoded strings built for the new sass js api.",
   "main": "base64Loader.js",
   "scripts": {
