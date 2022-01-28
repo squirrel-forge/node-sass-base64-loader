@@ -168,6 +168,11 @@ async function _internal_base64load_resolve_source_async( source, mime, options 
     let buf, file_path = null;
     if ( isUrl( source ) ) {
 
+        // Remote loading must be active
+        if ( !options.remote ) {
+            throw new Error( `base64load(${source},$mimetype) To use remote url loading, set remote = true in your options` );
+        }
+
         // Get node-fetch or throw with requirement
         const fetch = requireOptional( 'node-fetch', '^2.6.7', true );
 
@@ -319,6 +324,7 @@ function _internal_base64load_valid_arguments( input, sync = true ) {
 
 /**
  * @typedef {Object} Base64loadOptions
+ * @property {boolean} detect - Auto detect file mimetypes, default: false
  * @property {boolean} remote - Load files from http urls, default: false
  * @property {null|string} cwd - Base path for resolving relative paths, default: null > process.cwd()
  * @property {null|Object|Base64loadStringCache} cache - Caching object, default: {}
@@ -329,10 +335,17 @@ function _internal_base64load_valid_arguments( input, sync = true ) {
  * @type {Object|Base64loadOptions}
  */
 const BASE64LOAD_DEFAULT_OPTIONS = {
+    detect : false,
     remote : false,
     cwd : null,
     cache : {},
 };
+
+/**
+ * Sass function signature
+ * @type {string}
+ */
+const SASS_FUNCTION_SIGNATURE = 'base64load($source,$mimetype:null)';
 
 /**
  * Sass base64load factory
@@ -390,8 +403,8 @@ module.exports = function base64Loader( options = null, sassOptions = null ) {
 
     // Output format
     const handler = {
-        signature : 'base64load($source,$mimetype:null)',
-        callback : local_options.remote ? base64loadAsync : base64loadSync,
+        signature : SASS_FUNCTION_SIGNATURE,
+        callback : local_options.remote || local_options.detect ? base64loadAsync : base64loadSync,
     };
 
     // Add to sassOptions functions property
@@ -408,14 +421,20 @@ module.exports = function base64Loader( options = null, sassOptions = null ) {
         }
 
         // Make sure the signature is not defined yet
-        if ( sassOptions.functions[ handler.signature ] ) {
+        if ( sassOptions.functions[ SASS_FUNCTION_SIGNATURE ] ) {
             throw new Error( 'Sass function signature already defined' );
         }
 
         // Set function for signature
-        sassOptions.functions[ handler.signature ] = handler.callback;
+        sassOptions.functions[ SASS_FUNCTION_SIGNATURE ] = handler.callback;
     }
 
     // Return sass custom function information
     return handler;
 };
+
+/**
+ * Export sass function signature
+ * @type {string}
+ */
+module.exports.signature = SASS_FUNCTION_SIGNATURE;
