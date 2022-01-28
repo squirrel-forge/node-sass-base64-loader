@@ -19,7 +19,10 @@ Sass function signature: ```base64load($source,$mimetype)```
  - **$mimetype** : *string* - The *$source* file's mimetype
    (*Note:* This can be made optional by using the *Base64loadOptions.remote* option see [remote file loading](#remote-file-loading) for details.)
 
+**Returns** : *quoted string* - Contains the given base64 encoded data uri  
+
 #### Source scss
+
 ```scss
 :root {
   --image-loading-gif: #{url(base64load('cwd/images/loading.gif','image/gif'))};
@@ -27,6 +30,7 @@ Sass function signature: ```base64load($source,$mimetype)```
 ```
 
 #### Resulting css
+
 ```css
 :root {
   --image-loadgin-gif: url("data:image/gif;base64,R0lGODlhdgJ9AvYAAFZWVre3t0VFRdzc3DMzM...");
@@ -34,12 +38,18 @@ Sass function signature: ```base64load($source,$mimetype)```
 ```
 
 ### Plugin usage:
+
 ```javascript
 const sass = require( 'sass' );
 const base64Loader = require( '@squirrel-forge/sass-base64-loader' );
 
 // Classic way, calling the factory in place with options
-const sassOptions = { importers : [ base64Loader( /* null|Base64loadOptions */ ) ] };
+const sassOptions = { functions : {} };
+sassOptions.functions[ base64Loader.signature ] = base64Loader( /* null|Base64loadOptions */ );
+
+// Destructuring the result object
+const { signature, callback } = base64Loader( /* null|Base64loadOptions */ );
+sassOptions.functions[ signature ] = callback;
 
 // Plugin way, supply the sass options as second argument
 // It will create the functions property if required and add the signature and function.
@@ -61,6 +71,7 @@ const result = await sass.compileAsync( scssFilename, sassOptions );
  * @type {Object|Base64loadOptions}
  */
 const BASE64LOAD_DEFAULT_OPTIONS = {
+    detect : false,
     remote : false,
     cwd : null,
     cache : {},
@@ -68,15 +79,18 @@ const BASE64LOAD_DEFAULT_OPTIONS = {
 
 /**
  * @typedef {Object} Base64loadOptions
+ * @property {boolean} detect - Auto detect file mimetypes, default: false
  * @property {boolean} remote - Load files from http urls, default: false
  * @property {null|string} cwd - Base path for resolving relative paths, default: null > process.cwd()
  * @property {null|Object|Base64loadStringCache} cache - Caching object, default: {}
  */
 ```
 
-### Remote file loading
+### Remote file loading and mimetype detection
 
-If you wish to load data from urls or automatically detect mimetypes you need to set *Base64loadOptions.remote* = *true* and use the async *sass.compileAsync* api that supports async functions.
+Both options require use of the async *sass.compileAsync* api that supports async functions.
+If you wish to load data from urls you need to set *Base64loadOptions.remote* = *true*
+To automatically detect mimetypes set *Base64LoadOptions.detect* = *true*
 
 #### Requirements
 
@@ -86,7 +100,7 @@ Remote loading requires [node-fetch@^2.x.x](https://www.npmjs.com/package/node-f
 
 #### Optional argument $mimetype
 
-The $mimetype function argument becomes optional once you have enabled remote loading and the async handler is used, but it requires [file-type@^16.x.x](https://www.npmjs.com/package/file-type/v/16.5.3) to function in a *node@^10.x.x* environment, on higher node versions you should be able to use newer versions.
+The $mimetype function argument becomes optional once you have enabled the detect option or remote loading and the async handler is used, but it requires [file-type@^16.x.x](https://www.npmjs.com/package/file-type/v/16.5.3) to function in a *node@^10.x.x* environment, on higher node versions you should be able to use newer versions.
 
 ## Issues
 
