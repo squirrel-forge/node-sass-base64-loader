@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.11.1
+ - Fixed fatal output double quoting.
+
 ## 0.11.0
  - Added signature as static factory property.
  - Added async mimetype detection option without using remote loading.

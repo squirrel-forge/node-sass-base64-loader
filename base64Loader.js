@@ -231,7 +231,7 @@ function _internal_base64load_sync( source, mime, options ) {
     const { file_buffer } = _internal_base64load_resolve_source_sync( source, options );
 
     // Output the result
-    const output = `"data:${mime};base64,${file_buffer.toString( 'base64' )}"`;
+    const output = `data:${mime};base64,${file_buffer.toString( 'base64' )}`;
     options.cache && _internal_base64load_toCache( source, output, options.cache );
     return new sass.SassString( output );
 }
@@ -256,7 +256,7 @@ async function _internal_base64load_async( source, mime, options ) {
     const { file_buffer, mimetype } = await _internal_base64load_resolve_source_async( source, mime, options );
 
     // Output the result
-    const output = `"data:${mimetype};base64,${file_buffer.toString( 'base64' )}"`;
+    const output = `data:${mimetype};base64,${file_buffer.toString( 'base64' )}`;
     options.cache && _internal_base64load_toCache( source, output, options.cache );
     return new sass.SassString( output );
 }
