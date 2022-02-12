@@ -89,7 +89,9 @@ const BASE64LOAD_DEFAULT_OPTIONS = {
 ### Remote file loading and mimetype detection
 
 Both options require use of the async *sass.compileAsync* api that supports async functions.
+
 If you wish to load data from urls you need to set *Base64loadOptions.remote* = *true*
+
 To automatically detect mimetypes set *Base64LoadOptions.detect* = *true*
 
 #### Requirements
